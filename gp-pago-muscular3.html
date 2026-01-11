@@ -112,14 +112,14 @@
         // CONFIGURACIÓN Y CONSTANTES 
         // ===============================================
         // REEMPLAZAR CON TU URL DE DESPLIEGUE DE APPS SCRIPT
-        const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxTnqO0UYedLEDtN1I5b_qCfOaPUWgQHXTVKMDCoAZaXL-jv3AuhfY6jq-kgH9NaxNB/exec";
+        const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycby01kt4yhTL31t6mWYD4MBsf0JmknM3pxT_JEmGyZXLh-kISU4zlJEIhhTAmDOpnPP88g/exec";
         // DEBES REEMPLAZAR ESTO CON EL VALOR REAL DE LA CELDA B1 EN TU HOJA 'Config'
         const TOKEN_SEGURIDAD = "ZAHER_SECURE_2025"; 
         
         // 🚨 CONFIGURACIÓN DINÁMICA DE DRIVE 🚨
         // ID ÚNICO DEL ARCHIVO O CARPETA DE DRIVE PARA ESTE PRODUCTO
         // DEBES CAMBIAR ESTE VALOR EN CADA COPIA DEL ARCHIVO HTML
-        const DRIVE_RESOURCE_ID = "1ychCPUu6L0WM2_RdwiIfTKZ5t8qGbQnt";
+        const DRIVE_RESOURCE_ID = "15i4iRIQvrLNavZv3L7Ih0E2JAq0W2XbK";
         
         // URL de redirección final (construida con el ID de arriba)
         const FINAL_SUCCESS_REDIRECT_URL = "https://drive.google.com/drive/folders/" + DRIVE_RESOURCE_ID;
@@ -166,8 +166,8 @@
                     currentAmountVES = BASE_AMOUNT_USD * currentRate; 
                     updateAmountDisplay();
                 } else {
-                     showToast("Error al obtener la Tasa BCV. Usando tasa de respaldo (35.00)");
-                     currentRate = 35.00; 
+                     showToast("Error al obtener la Tasa BCV. Usando tasa de respaldo Binance (550.00)");
+                     currentRate = 550.00; 
                      currentAmountVES = BASE_AMOUNT_USD * currentRate;
                      updateAmountDisplay();
                 }
@@ -576,6 +576,4 @@
     </script>
 </body>
 
-
 </html>
-
