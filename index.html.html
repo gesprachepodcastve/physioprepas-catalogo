@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CENTRO DE ACCESO | PHYSIOPREPAS</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;700&family=Permanent+Marker&family=Poppins:wght@300;400;700&display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            font-family: 'Oswald', sans-serif;
+            overflow-x: hidden;
+            transition: background-color 0.5s ease, color 0.5s ease;
+        }
+
+        /* Dark Mode */
+        body.dark-mode {
+            background-color: #1a202c;
+            color: #ffffff;
+            background-image: radial-gradient(circle at 2px 2px, rgba(255,255,255,0.05) 1px, transparent 0);
+            background-size: 40px 40px;
+        }
+
+        /* Light Mode */
+        body.light-mode {
+            background-color: #f0f4f8;
+            color: #1a202c;
+            background-image: radial-gradient(circle at 2px 2px, rgba(0,0,0,0.05) 1px, transparent 0);
+            background-size: 40px 40px;
+        }
+
+        .font-marker { font-family: 'Permanent Marker', cursive; }
+        .font-poppins { font-family: 'Poppins', sans-serif; }
+
+        #navbar { transition: opacity 0.3s ease, transform 0.3s ease; }
+        #main-content.blur-active { filter: blur(8px); pointer-events: none; transform: scale(0.98); }
+
+        #sidebar {
+            position: fixed; top: 0; right: -340px; width: 300px; height: 100%;
+            background: #2d3748; border-left: 5px solid #000; z-index: 1000;
+            transition: right 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: -10px 0 30px rgba(0,0,0,0.5);
+        }
+        #sidebar.active { right: 0; }
+        body.light-mode #sidebar { background: #ffffff; color: #1a202c; }
+
+        #overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5); display: none; z-index: 999;
+        }
+        #overlay.active { display: block; }
+
+        .theme-switch-container {
+            display: flex; align-items: center; background: #000; padding: 4px; border: 2px solid #fff;
+            box-shadow: 4px 4px 0px #000; cursor: pointer; transition: 0.3s;
+        }
+        body.light-mode .theme-switch-container { border-color: #000; box-shadow: 4px 4px 0px #cbd5e0; background: #fff; }
+
+        .bento-card {
+            background: #2d3748; border: 3px solid #000; box-shadow: 8px 8px 0px #000;
+            transition: all 0.2s ease;
+        }
+        body.light-mode .bento-card { background: #ffffff; box-shadow: 8px 8px 0px #cbd5e0; }
+        .bento-card:hover { transform: translate(-4px, -4px); box-shadow: 12px 12px 0px #4c51bf; border-color: #4c51bf; }
+
+        .filter-btn { border: 2px solid #000; box-shadow: 4px 4px 0px #000; transition: 0.2s; }
+        .filter-btn.active { background-color: #f6e05e; color: #000; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+
+        .reveal { opacity: 0; transform: translateY(30px); transition: all 0.8s cubic-bezier(0.2, 0.8, 0.2, 1); }
+        .reveal.active { opacity: 1; transform: translateY(0); }
+
+        /* Estilos para el temario dentro de las cards */
+        .temario-lista ol { list-style-type: none; counter-reset: item; }
+        .temario-lista li { margin-bottom: 2px; }
+        .temario-lista ul { margin-top: 8px; list-style-type: none; }
+        .temario-lista ul li::before { content: "•"; color: #f6e05e; display: inline-block; width: 1em; margin-left: -1em; }
+    </style>
+</head>
+<body class="dark-mode">
+
+    <div id="overlay" onclick="toggleMenu()"></div>
+
+    <aside id="sidebar" class="p-8 flex flex-col gap-6">
+        <button onclick="toggleMenu()" class="self-end text-2xl hover:rotate-90 transition-transform"><i class="fas fa-times"></i></button>
+        <h2 class="font-marker text-3xl border-b-4 border-black pb-2 uppercase italic">Menú Táctico</h2>
+        <nav class="flex flex-col gap-4 font-bold text-xl uppercase italic">
+            <a href="landing.html" class="hover:text-yellow-400 transition-colors"><i class="fas fa-home mr-3 text-sm"></i>Inicio</a>
+            <a href="#" class="text-indigo-400"><i class="fas fa-th mr-3 text-sm"></i>Catálogo</a>
+            <a href="https://wa.me/584127762812?text=Buen%20d%C3%ADa.%20Quisiera%20solicitar%20informaci%C3%B3n%20detallada%20sobre%20el%20mantenimiento%20y%20las%20actualizaciones%20constantes%20de%20su%20cat%C3%A1logo%20de%20PHYSIOPREPAS.%20Gracias." target="_blank" class="hover:text-emerald-400 transition-colors"><i class="fab fa-whatsapp mr-3 text-sm"></i>Soporte Directo</a>
+        </nav>
+    </aside>
+
+    <div id="main-content">
+        <nav id="navbar" class="sticky top-0 z-40 max-w-6xl mx-auto grid grid-cols-3 items-center p-6 md:px-0 bg-transparent">
+            <div class="flex justify-start">
+                <div onclick="toggleTheme()" class="theme-switch-container group">
+                    <div id="theme-icon-container" class="w-8 h-8 flex items-center justify-center bg-white text-black group-hover:bg-yellow-400 transition-colors">
+                        <i id="theme-icon" class="fas fa-sun text-sm"></i>
+                    </div>
+                    <span id="theme-text" class="px-3 text-[10px] font-black uppercase hidden lg:inline-block tracking-widest text-white">Modo Claro</span>
+                </div>
+            </div>
+            <div class="flex justify-center">
+                <div class="font-marker text-3xl md:text-4xl tracking-tighter whitespace-nowrap">PHYSIOPREPAS</div>
+            </div>
+            <div class="flex justify-end">
+                <button onclick="toggleMenu()" class="text-xl bg-black text-white w-12 h-12 border-2 border-white shadow-[4px_4px_0px_#000] flex items-center justify-center hover:bg-indigo-600 transition-all">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+        </nav>
+
+        <header class="max-w-6xl mx-auto px-6 py-12">
+            <div class="reveal inline-block bg-indigo-600 text-white px-4 py-1 mb-4 border-2 border-black shadow-[4px_4px_0px_#000] font-bold italic">
+                SISTEMA DE ACCESO V.2.0
+            </div>
+            <h1 class="reveal text-6xl md:text-8xl font-black italic uppercase leading-none tracking-tighter mb-4" style="transition-delay: 100ms;">
+                CATÁLOGO <br> 
+                <span class="text-yellow-400 drop-shadow-[4px_4px_0px_#000]">PREPAS 2025-2026</span>
+            </h1>
+            <p class="reveal font-poppins text-slate-400 max-w-lg border-l-4 border-yellow-400 pl-4 py-2 bg-black/20" style="transition-delay: 200ms;">
+                Cada módulo requiere una llave de acceso única. Redirección automática a GP-PAGO.
+            </p>
+        </header>
+
+        <nav class="reveal max-w-6xl mx-auto mb-10 overflow-x-auto no-scrollbar py-4 px-6" style="transition-delay: 300ms;">
+            <div class="flex gap-4" id="filter-container">
+                <button onclick="applyFilter('all', this)" class="filter-btn active bg-white text-black px-6 py-2 font-bold whitespace-nowrap">TODO</button>
+                <button onclick="applyFilter('pt1', this)" class="filter-btn bg-slate-800 text-white px-6 py-2 font-bold whitespace-nowrap">TEÓRICO 1</button>
+                <button onclick="applyFilter('pt2', this)" class="filter-btn bg-slate-800 text-white px-6 py-2 font-bold whitespace-nowrap">TEÓRICO 2</button>
+                <button onclick="applyFilter('pt3', this)" class="filter-btn bg-slate-800 text-white px-6 py-2 font-bold whitespace-nowrap">TEÓRICO 3</button>
+                <button onclick="applyFilter('pp1', this)" class="filter-btn bg-slate-800 text-white px-6 py-2 font-bold whitespace-nowrap">PRÁCTICO 1</button>
+                <button onclick="applyFilter('pp2', this)" class="filter-btn bg-slate-800 text-white px-6 py-2 font-bold whitespace-nowrap">PRÁCTICO 2</button>
+                <button onclick="applyFilter('dale', this)" class="filter-btn bg-yellow-500 text-black px-6 py-2 font-bold whitespace-nowrap uppercase">D'ALESSANDRO</button>
+            </div>
+        </nav>
+
+        <main class="max-w-6xl mx-auto px-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 pb-20" id="prepas-grid">
+            <!-- Contenido dinámico -->
+        </main>
+
+        <footer class="max-w-6xl mx-auto border-t-4 border-black pt-8 mb-12 flex flex-col md:flex-row justify-between items-center opacity-70 px-6">
+            <div class="font-marker text-xl text-yellow-400">PHYSIOPREPAS | Una iniciatva de <a href = "https://www.instagram.com/gesprache_vzla">GESPRACHE PODCAST VE</a></div>
+            <div class="text-xs font-bold tracking-[0.4em] uppercase">VENEZUELA 2026</div>
+        </footer>
+    </div>
+
+    <script>
+        const prepas = [
+            { 
+                cat: "pt1", 
+                titulo: "SISTEMA MUSCULAR", 
+                sub: `
+                    <div class="temario-lista font-poppins text-[10px] uppercase font-bold tracking-tight">
+                        <ol>
+                            <li>I. Estructura y Excitabilidad Muscular</li>
+                            <li>II. Transmisión y Acoplamiento</li>
+                            <li>III. Fenómenos de la Contracción</li>
+                            <li>IV. Patología y Farmacología Clínica</li>
+                        </ol>
+                        <p class="mt-2 text-yellow-400">✨ Incluye:</p>
+                        <ul class="opacity-80">
+                            <li>Simulación de Potenciales Eléctricos</li>
+                            <li>Mecánica Molecular: Miosina y Actina</li>
+                            <li>Análisis Clínico: Miastenia Gravis</li>
+                            <li>Farmacología de Bloqueadores en Tiempo Real</li>
+                        </ul>
+                    </div>`, 
+                status: "$5.00", 
+                link: "gp-pago.html?item=muscular&monto=2.50", 
+                icono: "fa-fist-raised", 
+                color: "bg-red-500" 
+            },
+            { 
+                cat: "pt1", 
+                titulo: "LÍQUIDOS CORP.", 
+                sub: `
+                    <div class="temario-lista font-poppins text-[10px] uppercase font-bold tracking-tight">
+                        <ol>
+                            <li>I. Fundamentos de Biofísica Hídrica</li>
+                            <li>II. Compartimientos (LIC/LEC) e Iones</li>
+                            <li>III. Mecanismos de Transporte Activo/Pasivo</li>
+                            <li>IV. Ósmosis, Tonicidad y Fuerzas de Starling</li>
+                        </ol>
+                        <p class="mt-2 text-blue-400">✨ Incluye:</p>
+                        <ul class="opacity-80">
+                            <li>Electrofisiología: Nernst, GHK y PA</li>
+                            <li>Regulación del Balance Hídrico</li>
+                            <li>Homeostasis frente a Trastornos de Balance</li>
+                            <li>Análisis de Casos Clínicos Aplicados</li>
+                        </ul>
+                    </div>`, 
+                status: "$3.00", 
+                link: "https://forms.gle/uPpT95miWqqJRhXR6", 
+                icono: "fa-tint", 
+                color: "bg-blue-500" 
+            },
+            { 
+                cat: "dale", 
+                titulo: "D'ALESSANDRO 01", 
+                sub: `<p class="font-poppins opacity-70 text-xs font-bold uppercase tracking-widest">Resolución práctica de problemas de ósmosis y presiones hidrostáticas.</p>`, 
+                status: "GRATIS", 
+                link: "https://drive.google.com/drive/folders/1aJM_OzI1946i8frYF-KpMwm0zjQ0qjBA?usp=sharing", 
+                icono: "fa-square-root-alt", 
+                color: "bg-yellow-500" 
+            }
+        ];
+
+        function render(filter = 'all') {
+            const grid = document.getElementById('prepas-grid');
+            grid.innerHTML = '';
+            const filtered = filter === 'all' ? prepas : prepas.filter(p => p.cat === filter);
+            
+            filtered.forEach((p, index) => {
+                const card = document.createElement('div');
+                card.className = 'bento-card p-6 flex flex-col justify-between min-h-[420px] reveal';
+                card.style.transitionDelay = `${(index + 2) * 100}ms`;
+                const statusColor = p.status.toLowerCase() === 'gratis' ? 'bg-emerald-400' : 'bg-white';
+
+                card.innerHTML = `
+                    <div>
+                        <div class="flex justify-between items-start mb-6">
+                            <div class="w-14 h-14 ${p.color} border-4 border-black shadow-[4px_4px_0px_#000] flex items-center justify-center">
+                                <i class="fa-solid ${p.icono} text-black text-2xl"></i>
+                            </div>
+                            <div class="font-marker ${statusColor} text-black px-3 py-1 text-sm border-2 border-black rotate-[-5deg] shadow-[2px_2px_0px_#000]">
+                                ${p.status}
+                            </div>
+                        </div>
+                        <h2 class="text-3xl font-black italic uppercase leading-none mb-4 tracking-tighter">${p.titulo}</h2>
+                        ${p.sub}
+                    </div>
+                    <a href="${p.link}" class="mt-8 bg-white text-black p-4 border-4 border-black shadow-[6px_6px_0px_#000] hover:shadow-none hover:translate-x-1 hover:translate-y-1 transition-all flex justify-between items-center group font-black italic uppercase">
+                        <span>Adquirir Acceso</span>
+                        <i class="fa-solid fa-arrow-right group-hover:rotate-[-45deg] transition-transform"></i>
+                    </a>`;
+                grid.appendChild(card);
+                setTimeout(() => card.classList.add('active'), 100);
+            });
+        }
+
+        function setTheme(mode) {
+            const body = document.body;
+            const text = document.getElementById('theme-text');
+            const icon = document.getElementById('theme-icon');
+            const iconContainer = document.getElementById('theme-icon-container');
+            if (mode === 'light') {
+                body.classList.remove('dark-mode'); body.classList.add('light-mode');
+                text.innerText = "Modo Oscuro"; text.style.color = "#000";
+                icon.className = "fas fa-moon";
+                iconContainer.style.backgroundColor = "#000"; iconContainer.style.color = "#fff";
+            } else {
+                body.classList.remove('light-mode'); body.classList.add('dark-mode');
+                text.innerText = "Modo Claro"; text.style.color = "#fff";
+                icon.className = "fas fa-sun";
+                iconContainer.style.backgroundColor = "#fff"; iconContainer.style.color = "#000";
+            }
+            localStorage.setItem('theme', mode);
+        }
+
+        function toggleTheme() {
+            const current = document.body.classList.contains('light-mode') ? 'dark' : 'light';
+            setTheme(current);
+        }
+
+        function toggleMenu() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('overlay');
+            sidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
+            document.getElementById('main-content').classList.toggle('blur-active');
+        }
+
+        function applyFilter(cat, btn) {
+            document.querySelectorAll('.filter-btn').forEach(b => {
+                b.classList.remove('active', 'bg-white', 'text-black');
+                b.classList.add('bg-slate-800', 'text-white');
+            });
+            btn.classList.add('active', 'bg-white', 'text-black');
+            btn.classList.remove('bg-slate-800', 'text-white');
+            render(cat);
+        }
+
+        window.onload = () => {
+            setTheme(localStorage.getItem('theme') || 'dark');
+            render();
+            document.querySelectorAll('.reveal').forEach((el, i) => {
+                setTimeout(() => el.classList.add('active'), i * 150);
+            });
+        };
+    </script>
+</body>
+</html>
